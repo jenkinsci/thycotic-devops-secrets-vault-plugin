@@ -31,6 +31,7 @@ public class VaultBuildWrapper extends SimpleBuildWrapper {
     private static final String CLIENT_ID_PROPERTY = "secrets_vault.client_id";
     private static final String CLIENT_SECRET_PROPERTY = "secrets_vault.client_secret";
     private static final String TENANT_PROPERTY = "secrets_vault.tenant";
+    private static final String TLD_PROPERTY = "secrets_vault.tld";
 
     private List<VaultSecret> secrets;
 
@@ -71,6 +72,7 @@ public class VaultBuildWrapper extends SimpleBuildWrapper {
             properties.put(CLIENT_SECRET_PROPERTY, clientSecret.getSecret());
             properties.put(TENANT_PROPERTY,
                     StringUtils.defaultIfBlank(vaultSecret.getTenant(), configuration.getTenant()));
+            properties.put(TLD_PROPERTY, StringUtils.defaultIfBlank(vaultSecret.getTld(), configuration.getTld()));
             applicationContext.getEnvironment().getPropertySources()
                     .addLast(new MapPropertySource("properties", properties));
             // Register the factoryBean from secrets-java-sdk

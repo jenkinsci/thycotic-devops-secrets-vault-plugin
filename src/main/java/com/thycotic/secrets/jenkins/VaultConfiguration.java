@@ -17,6 +17,7 @@ import jenkins.model.GlobalConfiguration;
 @Symbol("devOpsSecretsVault")
 public class VaultConfiguration extends GlobalConfiguration {
     public static final String DEFAULT_ENVIRONMENT_VARIABLE_PREFIX = "DSV_";
+    public static final String DEFAULT_TLD = "com";
 
     /**
      * Calls {@link hudson.ExtensionList#lookupSingleton(VaultConfiguration.class)}
@@ -29,7 +30,8 @@ public class VaultConfiguration extends GlobalConfiguration {
         return ExtensionList.lookupSingleton(VaultConfiguration.class);
     }
 
-    private String credentialId, tenant, environmentVariablePrefix = DEFAULT_ENVIRONMENT_VARIABLE_PREFIX;
+    private String credentialId, tenant, tld = DEFAULT_TLD,
+            environmentVariablePrefix = DEFAULT_ENVIRONMENT_VARIABLE_PREFIX;
 
     public VaultConfiguration() {
         load();
@@ -67,6 +69,16 @@ public class VaultConfiguration extends GlobalConfiguration {
     @DataBoundSetter
     public void setTenant(final String tenant) {
         this.tenant = tenant;
+        save();
+    }
+
+    public String getTld() {
+        return tld;
+    }
+
+    @DataBoundSetter
+    public void setTld(String tld) {
+        this.tld = tld;
         save();
     }
 }

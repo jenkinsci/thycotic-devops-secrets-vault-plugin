@@ -45,7 +45,7 @@ public class VaultSecret extends AbstractDescribableImpl<VaultSecret> {
         this.mappings = mappings;
     }
 
-    private String credentialId, tenant;
+    private String credentialId, tenant, tld;
 
     public String getCredentialId() {
         return credentialId;
@@ -63,6 +63,15 @@ public class VaultSecret extends AbstractDescribableImpl<VaultSecret> {
     @DataBoundSetter
     public void setTenant(final String tenant) {
         this.tenant = tenant;
+    }
+
+    public String getTld() {
+        return tld;
+    }
+
+    @DataBoundSetter
+    public void setTld(String tld) {
+        this.tld = tld;
     }
 
     public static class Mapping extends AbstractDescribableImpl<Mapping> {
@@ -109,6 +118,12 @@ public class VaultSecret extends AbstractDescribableImpl<VaultSecret> {
                     throws IOException, ServletException {
                 if (StringUtils.isBlank(value) && StringUtils.isBlank(VaultConfiguration.get().getTenant()))
                     return FormValidation.error("Tenant is required");
+                return FormValidation.ok();
+            }
+
+            public FormValidation doCheckTld(@QueryParameter final String value) throws IOException, ServletException {
+                if (StringUtils.isBlank(value) && StringUtils.isBlank(VaultConfiguration.get().getTld()))
+                    return FormValidation.error("TLD is required");
                 return FormValidation.ok();
             }
 
