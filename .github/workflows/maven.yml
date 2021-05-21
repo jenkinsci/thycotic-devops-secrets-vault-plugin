@@ -35,5 +35,5 @@ jobs:
       - name: Upload HPI File
         uses: actions/upload-artifact@v1
         with:
-          name: dsv-jenkins.hpi
-          path: target/dsv-jenkins.hpi
+          name: thycotic-dsv.hpi
+          path: target/thycotic-dsv.hpi
