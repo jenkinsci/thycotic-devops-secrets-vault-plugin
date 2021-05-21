@@ -35,5 +35,5 @@ jobs:
       - name: Upload HPI File
         uses: actions/upload-artifact@v1
         with:
-          name: thycotic-dsv.hpi
-          path: target/thycotic-dsv.hpi
+          name: thycotic-devops-secrets-vault.hpi
+          path: target/thycotic-devops-secrets-vault.hpi
