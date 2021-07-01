@@ -1,5 +1,7 @@
 # Thycotic DevOps Secrets Vault
 
+[![Jenkins Plugin Build](https://github.com/jenkinsci/thycotic-devops-secret-vault-plugin/actions/workflows/package.yml/badge.svg)](https://github.com/jenkinsci/thycotic-devops-secret-vault-plugin/actions/workflows/package.yml)
+
 The Thycotic DevOps Secrets Vault (DSV) Jenkins Plugin allows you to access and reference your Secrets data available for use in Jenkins builds.
 
 ## Usage
