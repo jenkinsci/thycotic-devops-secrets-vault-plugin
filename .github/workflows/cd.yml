@@ -1,10 +1,9 @@
 name: cd
 
 on:
-  workflow_dispatch:
-  check_run:
-    types:
-      - completed
+  push:
+    tags:
+      - 'v*'
 
 
 jobs:
