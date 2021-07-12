@@ -20,7 +20,7 @@ public class VaultConfiguration extends GlobalConfiguration {
     public static final String DEFAULT_TLD = "com";
 
     /**
-     * Calls {@link hudson.ExtensionList#lookupSingleton(VaultConfiguration.class)}
+     * Calls hudson.ExtensionList#lookupSingleton(VaultConfiguration.class)
      * to get the singleton instance of this class which is how the Jenkins
      * documentation recommends that it be accessed.
      *
