@@ -4,11 +4,15 @@ import com.thycotic.secrets.vault.spring.Secret;
 import com.thycotic.secrets.vault.spring.SecretsVault;
 import com.thycotic.secrets.vault.spring.SecretsVaultFactoryBean;
 
+import hudson.console.ConsoleLogFilter;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepExecutionImpl;
+import org.jenkinsci.plugins.workflow.steps.BodyExecutionCallback;
+import org.jenkinsci.plugins.workflow.steps.BodyInvoker;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -25,7 +29,9 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VaultSecretStep extends Step implements Serializable {
@@ -36,12 +42,12 @@ public class VaultSecretStep extends Step implements Serializable {
     private String tld;
 
     @DataBoundConstructor
-    public VaultSecretStep(String tenant, String secretPath, String secretDataKey, String credentialsId, String tld) {
-        this.tenant = tenant;
+    public VaultSecretStep(VaultSecretStepConfig config, String secretPath, String secretDataKey) {
+        this.tenant = config.getTenant();
         this.secretPath = secretPath;
         this.secretDataKey = secretDataKey;
-        this.credentialsId = credentialsId;
-        this.tld = tld;
+        this.credentialsId = config.getCredentialId();
+        this.tld = config.getTld();
     }
 
     @DataBoundSetter
@@ -94,7 +100,7 @@ public class VaultSecretStep extends Step implements Serializable {
         return new VaultSecretStepExecution(this, stepContext);
     }
 
-    private static final class VaultSecretStepExecution extends StepExecution {
+    private static final class VaultSecretStepExecution extends AbstractStepExecutionImpl {
         private static final String CLIENT_ID_PROPERTY = "secrets_vault.client_id";
         private static final String CLIENT_SECRET_PROPERTY = "secrets_vault.client_secret";
         private static final String TENANT_PROPERTY = "secrets_vault.tenant";
@@ -107,6 +113,9 @@ public class VaultSecretStep extends Step implements Serializable {
             super(context);
             this.step = step;
         }
+
+        @Override
+        public void onResume() {}
 
         private void writeObject(ObjectOutputStream stream) throws Exception {
             stream.defaultWriteObject();
@@ -121,6 +130,7 @@ public class VaultSecretStep extends Step implements Serializable {
             final ClientSecret clientSecret = ClientSecret.get(step.getCredentialsId(), null);
             final VaultConfiguration configuration = VaultConfiguration.get();
             final Map<String, Object> properties = new HashMap<>();
+            final List<String> valuesToMask = new ArrayList<>();
 
             final AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
             properties.put(CLIENT_ID_PROPERTY, clientSecret.getClientId());
@@ -134,19 +144,33 @@ public class VaultSecretStep extends Step implements Serializable {
             applicationContext.registerBean(SecretsVaultFactoryBean.class);
             applicationContext.refresh();
 
+            StepContext context = getContext();
+
             try {
                 // Fetch the secret
                 final Secret secret = applicationContext.getBean(SecretsVault.class).getSecret(step.getSecretPath());
-                getContext().onSuccess(secret.getData().get(step.getSecretDataKey()));
+                valuesToMask.add(secret.getData().get(step.getSecretDataKey()));
+                context.onSuccess(secret.getData().get(step.getSecretDataKey()));
             } catch (Exception e) {
-                getContext().onFailure(e);
+                context.onFailure(e);
             }
             applicationContext.close();
-            return true;
+            
+            Run<?, ?> run = context.get(Run.class);
+            ConsoleLogFilter original = context.get(ConsoleLogFilter.class);
+            ConsoleLogFilter subsequent = new VaultConsoleLogFilter(run.getCharset().name(), valuesToMask);
+
+            context.newBodyInvoker().
+                withContext(BodyInvoker.mergeConsoleLogFilters(original, subsequent)).
+                withCallback(BodyExecutionCallback.wrap(context)).
+            	start();
+
+            return false;
         }
 
         @Override
         public void stop(@Nonnull Throwable throwable) throws Exception {
+            getContext().onFailure(throwable);
         }
     }
 
@@ -162,8 +186,13 @@ public class VaultSecretStep extends Step implements Serializable {
         }
 
         @Override
+        public boolean takesImplicitBlockArgument() {
+            return true;
+        }
+
+        @Override
         public String getFunctionName() {
-            return "vaultSecretStep";
+            return "dsvSecret";
         }
 
         private void writeObject(ObjectOutputStream stream) throws Exception {
