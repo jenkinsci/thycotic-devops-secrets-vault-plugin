@@ -20,14 +20,21 @@ tasks:
     cmds:
       - changie batch auto
       - changie merge
+      - git add .changes/*
+      - git add CHANGELOG.md
   changelog:refresh:
     desc: refresh the changelog without trying to create a new version
     cmds:
       - changie merge
+  changelog:latest:
+    desc: show the latest changelog entry (which will power the release draft)
+    cmds:
+      - glow .changes/$(changie latest).md
   release:
     desc: create a draft release called "next" for jenkinsci to create a release from once PR merged
     interactive: true
     cmds:
       - |
-        echo "creating draft release called 'next' based on changelog file: changes/$(change latest).md"
-        gum confirm "proceed with creating draft release?" && gh release create next --draft --notes-file=changes/$(change latest).md
+        gum format "## Draft Release Content"
+        glow ".changes/$(changie latest).md"
+        gum confirm "proceed with creating draft release?" && gh release create next --draft --notes-file=.changes/$(changie latest).md
