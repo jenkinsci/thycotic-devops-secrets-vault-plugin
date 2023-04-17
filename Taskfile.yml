@@ -38,3 +38,13 @@ tasks:
         gum format "## Draft Release Content"
         glow ".changes/$(changie latest).md"
         gum confirm "proceed with creating draft release?" && gh release create 'next' --title 'next' --draft --notes-file=.changes/$(changie latest).md
+  pr:
+    desc: create a PR for the next release
+    interactive: true
+    cmds:
+      - |
+        gum format "## Draft PR Content"
+        glow ".changes/$(changie latest).md"
+        gum format "Choose Label for PR"
+        label=$(gum choose breaking major-enhancement feature bug developer dependencies documentation chore internal test)
+        gum confirm "proceed with creating PR?" && gh pr create --title $(gum input --prompt "conventional commit pr title > ") --label $label --body-file=.changes/$(changie latest).md

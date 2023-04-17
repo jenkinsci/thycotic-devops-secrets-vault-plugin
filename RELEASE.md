@@ -18,3 +18,4 @@
   - Since we are using the "using" workflow I can't pass this in as an override to match changie so I've updated changie config to match the items that should be interesting.
   - [List of Emoji that are looked for automatically](https://github.com/jenkins-infra/interesting-category-action/blob/78f4b74509528c18790d9c36b2cccb5b21ed3451/action.yaml#L13)
   - Value: `default: '[💥🚨🎉🐛⚠🚀🌐👷]|:(boom|tada|construction_worker):'`
+  - The labels for the pull request must be used if leveraging the reusable workflows as well. [labels](https://github.com/jenkinsci/.github/blob/ce466227c534c42820a597cb8e9cac2f2334920a/.github/release-drafter.yml#L9-L50)
