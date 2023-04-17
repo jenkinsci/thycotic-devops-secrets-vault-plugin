@@ -46,9 +46,11 @@ tasks:
         gum format "## Draft PR Content"
         glow ".changes/$(changie latest).md"
         gum format "Choose Label for PR"
-        label=$(gum choose breaking major-enhancement feature bug developer dependencies documentation chore internal test) && echo "👉 label chosen: $label"
-        title=$(gum input --prompt "conventional commit pr title > ") && echo "👉 title chosen: $title"
+        label=$(gum choose breaking major-enhancement feature bug developer dependencies documentation chore internal test)
+        echo "👉 label chosen: $label"
+        title=$(gum input --prompt "conventional commit pr title > ")
+        echo "👉 title chosen: $title"
         gum confirm "proceed with creating PR?" && gh pr create \
-          --title $title \
-          --label $label \
+          --title "${title}" \
+          --label "${label}" \
           --body-file=.changes/$(changie latest).md
