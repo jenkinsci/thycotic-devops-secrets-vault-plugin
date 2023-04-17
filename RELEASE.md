@@ -7,6 +7,7 @@
 
 ## General Process
 
+- `task config` to set the github cli default to `jenkinsci/thycotic-devops-secrets-vault-plugin` instead of the forked branch.
 - `task bump` to generate changelog and update release notes.
 - `task release` to create the draft release.
 

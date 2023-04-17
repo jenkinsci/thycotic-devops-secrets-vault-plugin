@@ -7,6 +7,14 @@ tasks:
     cmds:
       - task --list-all
     silent: true
+  config:
+    desc: ensure config for github cli is set to create releases at jenkinsci
+    cmds:
+      - |
+        if ! gh config get prompt; then
+          echo "configuring github cli"
+          gh repo set-default jenkinsci/thycotic-devops-secrets-vault-plugin
+        fi
   bump:
     desc: bump the version using changie
     cmds:
