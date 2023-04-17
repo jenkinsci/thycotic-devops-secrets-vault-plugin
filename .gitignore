@@ -89,3 +89,7 @@ buildNumber.properties
 work/
 
 # End of https://www.gitignore.io/api/java,maven,visualstudiocode
+
+!.mvn/maven.config
+!.mvn/extensions.xml
+!.mvn/checkstyle.xml
