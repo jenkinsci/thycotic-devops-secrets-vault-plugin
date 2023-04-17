@@ -56,6 +56,8 @@ newlines:
   beforeVersion: 0
   endOfVersion: 0
 # replacements:
-#   - path: 'package.json'
-#     find: '   "version": ".*"'
-#     replace: '   "version": "{{.Version}}"'
+#   - path: pom.xml
+#     find: <changelist>.*</changelist>
+
+#     #<artifactId>thycotic-devops-secrets-vault</artifactId>\s*<version>(\d+\.\d*\.\d*)</version>
+#     replace: "<changelist>{{.VersionNoPrefix}}</changelist>"
