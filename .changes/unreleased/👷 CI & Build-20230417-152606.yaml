@@ -1,0 +1,4 @@
+kind: "\U0001F477 CI & Build"
+body: Align the emojis in changie to use what Jenkins workflow searches for to identify
+  "signficant/interesting" changes that should constitute a release.
+time: 2023-04-17T15:26:06.364806-05:00
