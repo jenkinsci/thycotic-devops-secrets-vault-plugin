@@ -37,4 +37,4 @@ tasks:
       - |
         gum format "## Draft Release Content"
         glow ".changes/$(changie latest).md"
-        gum confirm "proceed with creating draft release?" && gh release create next --draft --notes-file=.changes/$(changie latest).md
+        gum confirm "proceed with creating draft release?" && gh release create --title 'next' --draft --notes-file=.changes/$(changie latest).md
