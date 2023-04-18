@@ -25,7 +25,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     outputs:
-      should_release: ${{ steps.verify-ci-status.outputs.result == 'success' && steps.interesting-categories.outputs.interesting == 'true' }}
+      should_release: ${{ steps.interesting-categories.outputs.interesting == 'true' }}
     steps:
       # - name: Verify CI status
       #   uses: jenkins-infra/verify-ci-status-action@v1.2.2
