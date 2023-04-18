@@ -1,6 +1,6 @@
 HELP.md
 # Other files created by Spring Initializr
-.mvn
+#.mvn
 mvnw
 mvnw.cmd
 
