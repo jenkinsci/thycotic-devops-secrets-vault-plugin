@@ -20,6 +20,7 @@
           ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
           ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin. -->
         <spring.version>5.3.20</spring.version>
+        <changelist>999999-SNAPSHOT</changelist>
     </properties>
     <name>Thycotic DevOps Secrets Vault Plugin</name>
     <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
